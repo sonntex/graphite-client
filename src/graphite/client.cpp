@@ -98,7 +98,7 @@ void client::send(const char* data, std::size_t size)
 {
   if (!socket_.is_open())
     socket_.open(boost::asio::ip::udp::v4());
-  BOOST_LOG_TRIVIAL(info) << std::string(data, size - 1);
+  // BOOST_LOG_TRIVIAL(info) << std::string(data, size - 1);
   boost::system::error_code ec;
   std::size_t transferred = socket_.send_to(boost::asio::buffer(data, size), ep_, 0, ec);
   if (ec)
