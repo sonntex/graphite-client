@@ -20,4 +20,3 @@ target_link_libraries(
   graphite-example1
   boost_log
   pthread)
-  
