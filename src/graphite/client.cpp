@@ -25,7 +25,8 @@ client::client(boost::asio::io_context& io, const boost::asio::ip::udp::endpoint
   , socket_(io)
   , prefix_(format(prefix) + "." + boost::asio::ip::host_name())
 {
-  boost::random::mt19937 gen(get_system_now());
+  update_now();
+  boost::random::mt19937 gen(get_now());
   boost::random::uniform_int_distribution<> dist(5000, 15000);
   start_ = dist(gen);
   interval_ = 60000;
@@ -109,7 +110,6 @@ void client::send(const char* data, std::size_t size)
 
 void client::send()
 {
-  update_now();
   auto now = get_now() / 1000;
   std::unique_lock<decltype(mutex_)> lock(mutex_);
   std::size_t size = params_.size();
@@ -136,11 +136,11 @@ void client::send()
 
 void client::loop()
 {
-  update_now();
   int timeout = interval_ - get_now() % interval_ + start_;
   timer_.expires_from_now(boost::posix_time::milliseconds(timeout));
   timer_.async_wait(
     [this](boost::system::error_code ec) {
+      update_now();
       if (ec) {
         if (ec != boost::asio::error::operation_aborted)
           loop();
