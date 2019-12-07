@@ -42,9 +42,12 @@ void client::cancel()
 std::size_t client::add_parameter(parameter&& param)
 {
   std::unique_lock<std::mutex> lock(mutex_);
+  if (existed_params_.count(param.path))
+    throw std::logic_error("already existed");
   std::size_t id = params_.size();
   if (id >= params_.capacity())
-    throw std::out_of_range("params max size exceeded");
+    throw std::out_of_range("exceeded");
+  existed_params_.insert(param.path);
   params_.push_back(std::move(param));
   return id;
 }

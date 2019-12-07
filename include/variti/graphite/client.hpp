@@ -6,6 +6,7 @@
 #include <boost/asio/ip/udp.hpp>
 #include <boost/asio/deadline_timer.hpp>
 #include <mutex>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -45,6 +46,7 @@ private:
   int interval_;
   std::mutex mutex_;
   std::vector<parameter> params_;
+  std::set<std::string> existed_params_;
 };
 
 }}
